@@ -1,28 +1,25 @@
-import React, { useState } from "react";
-import { Route, Switch } from "react-router-dom";
-import NavBar from "./NavBar";
-import MoviesPage from "./MoviesPage";
+import React from "react";
+import { Route, useRouteMatch } from "react-router-dom";
+import MoviesList from "./MoviesList";
+import MovieShow from "./MovieShow";
 
-function App() {
-  const [movies, setMovies] = useState({
-    1: { id: 1, title: "A River Runs Through It" },
-    2: { id: 2, title: "Se7en" },
-    3: { id: 3, title: "Inception" },
-  });
+function MoviesPage({ movies }) {
+  const match = useRouteMatch();
 
   return (
     <div>
-      <NavBar />
-      <Switch>
-        <Route path="/movies">
-          <MoviesPage movies={movies} />
-        </Route>
-        <Route exact path="/">
-          <div>Home</div>
-        </Route>
-      </Switch>
+      <MoviesList movies={movies} />
+
+      {/* Adding code to show a message to the user to select a movie if they haven't yet */}
+      <Route exact path={match.url}>
+        <h3>Choose a movie from the list above</h3>
+      </Route>
+
+      <Route path={`${match.url}/:movieId`}>
+        <MovieShow movies={movies} />
+      </Route>
     </div>
   );
 }
 
-export default App;
+export default MoviesPage;
